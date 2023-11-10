@@ -3,10 +3,10 @@ import pickle
 import torch
 import numpy as np
 from torch.nn.functional import cosine_similarity
-from settings import EMBEDDING_DIM, DATA_PATH, EMBEDDING_MODEL
+from settings import EMBEDDING_DIM, OUTPUT_PATH, EMBEDDING_MODEL
 
 model = SentenceTransformer(EMBEDDING_MODEL)
-with open(DATA_PATH, "rb") as f:
+with open(OUTPUT_PATH, "rb") as f:
     X = pickle.load(f)
     abstracts, embeddings = X["abstracts"], X["embeddings"]
 

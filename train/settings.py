@@ -1,6 +1,7 @@
-NUM_DOCUMENTS = 200000
+NUM_DOCUMENTS = 250000
 EMBEDDING_DIM = 384
 
-DATA_PATH = "data.pickle"
+DATASET_PATH = "arxiv.json"
+OUTPUT_PATH = "data.pickle"
 
 EMBEDDING_MODEL = "paraphrase-MiniLM-L6-v2"
