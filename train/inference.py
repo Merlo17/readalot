@@ -10,7 +10,7 @@ with open(OUTPUT_PATH, "rb") as f:
     X = pickle.load(f)
     abstracts, embeddings = X["abstracts"], X["embeddings"]
 
-text = "Microsoft employee of the month, victor pescaru"
+text = "The dangerous effects of social media like TikTok"
 
 text_embedding = torch.Tensor(model.encode(text)).reshape([1, EMBEDDING_DIM])
 similarities = cosine_similarity(text_embedding, embeddings, dim=1)
