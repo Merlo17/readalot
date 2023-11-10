@@ -1,6 +1,11 @@
-from flask import Flask 
-  
+from flask import Flask, redirect, url_for, request, Response
+import asyncio
+
 app = Flask(__name__) 
+
+async def background_task(swipe_respone):
+    await asyncio.sleep(5)
+    print("Gotti ", swipe_respone)
 
 @app.route("/") 
 def index(): 
@@ -13,6 +18,15 @@ def index():
 
 </body>
 </html>"""
+
+@app.route('/swipe', methods = ['POST'])
+async def swipe():
+    if request.method == 'POST':
+        swipe_respone = request.form['swipeResponse']
+        asyncio.ensure_future(background_task(swipe_respone))
+        return redirect(url_for('index'))
+    else:
+        return Response("Only post endpoint here", status=400)
   
 if __name__ == "__main__": 
     app.run(debug=True) 
