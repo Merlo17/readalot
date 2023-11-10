@@ -9,7 +9,7 @@ model = SentenceTransformer(EMBEDDING_MODEL)
 
 abstracts = []
 if os.path.exists(OUTPUT_PATH):
-    with open(DATASET_PATH, "rb") as f:
+    with open(OUTPUT_PATH, "rb") as f:
         data = pickle.load(f)
         abstracts, existing_embeddings = data["abstracts"], data["embeddings"]
         num_existing = existing_embeddings.shape[0]
