@@ -1,6 +1,6 @@
 <template>
     <main>
-        <PaperSwiper :papers="tmpPapers" />
+        <PaperSwiper :paper="ref(tmpPapers[0])" />
     </main>
 </template>
 

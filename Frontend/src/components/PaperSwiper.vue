@@ -14,10 +14,15 @@ import { EffectCards } from 'swiper/modules';
 const ANIMATION_DURATION = 100;
 
 let props = defineProps<{
-    papers: Ref<string[]>;
+    paper: Ref<any>;
 }>();
-let visiblePapers = ref([props.papers[1], props.papers[0], props.papers[1]]);
-let currPaperIdx = 0;
+let dummyPaper = {
+    title: '',
+    authors: '',
+    date: '',
+    abstract: '',
+};
+let visiblePapers = ref([dummyPaper, props.paper.value, dummyPaper]);
 
 const modules = [EffectCards];
 
@@ -31,13 +36,8 @@ function setSwiperRef(swiper: any) {
 function updateList(data: any) {
     swiperRef.activeIndex = 1;
 
-    currPaperIdx = (currPaperIdx + 1) % props.papers.length;
-    props.paper[currPaperIdx] = data;
-    visiblePapers.value = [
-        props.papers[(currPaperIdx + 1) % props.papers.length],
-        props.papers[currPaperIdx],
-        props.papers[(currPaperIdx + 1) % props.papers.length],
-    ];
+    props.paper.value = data;
+    visiblePapers.value = [dummyPaper, props.paper.value, dummyPaper];
 
     swiperRef.update();
 }
@@ -55,6 +55,11 @@ async function swipeLeft() {
         }, ANIMATION_DURATION);
     } catch (err) {
         // uh oh
+        let data = props.paper.value;
+        setTimeout(function () {
+            updateList(data);
+        }, ANIMATION_DURATION);
+
         console.log(err);
     }
 }
@@ -72,6 +77,11 @@ async function swipeRight() {
         }, ANIMATION_DURATION);
     } catch (err) {
         // uh oh
+        let data = props.paper.value;
+        setTimeout(function () {
+            updateList(data);
+        }, ANIMATION_DURATION);
+
         console.log(err);
     }
 }
