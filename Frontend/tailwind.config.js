@@ -10,7 +10,11 @@ module.exports = {
         './src/**/*.vue',
     ],
     theme: {
-        extend: {},
+        extend: {
+            lineClamp: {
+                24: '24',
+            }
+        },
     },
     plugins: [],
 };

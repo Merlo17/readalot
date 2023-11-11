@@ -1,6 +1,10 @@
 <template>
-    <div id="app">
-        <router-view></router-view>
+    <div
+        id="app"
+        class="flex flex-col gap-16 w-full mt-0 place-content-center place-items-center bg-slate-100"
+    >
+        <NavigationBar />
+        <router-view class="w-1/2"></router-view>
     </div>
 </template>
 
