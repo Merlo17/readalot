@@ -2,8 +2,8 @@
     <main
         class="flex flex-col gap-16 w-full mt-0 place-content-center place-items-center"
     >
-        <NavigationBar :onSubmitQuery="sendQuery(query)" />
-        <PaperSwiper class="w-1/2" :paper="ref(tmpPapers[0])" />
+        <NavigationBar @submitQuery="sendQuery" />
+        <PaperSwiper class="w-1/2" :paper="ref(papers[0])" />
     </main>
 </template>
 
@@ -16,6 +16,7 @@ import ApiService from '@/services/ApiService';
 async function sendQuery(query: string) {
     try {
         const { data } = await ApiService.browse({ query: query });
+        papers = data;
     } catch (err) {
         // uh oh
         console.log(err);
@@ -23,7 +24,8 @@ async function sendQuery(query: string) {
 }
 
 let query = ref('');
-let tmpPapers = reactive([
+// let papers = ref([]);
+let papers = reactive([
     {
         title: 'Paper 1',
         date: '2021-01-01',
