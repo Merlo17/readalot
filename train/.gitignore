@@ -1,4 +1,5 @@
 data.pickle
+data_full.pickle
 arxiv.json
 venv
 __pycache__

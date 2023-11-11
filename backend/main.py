@@ -19,9 +19,9 @@ prev_papers = []                                                    # Articles t
 candidate_papers = []                                               # These are used for left swipes, so there is no need to reorder the articles
 
 
-with open("../train/data.pickle", "rb") as f:
+with open("../train/data_full.pickle", "rb") as f:
     X = pickle.load(f)
-    abstracts, embeddings = X["abstracts"], X["embeddings"]
+    abstracts, embeddings, authors, titles = X["abstracts"], X["embeddings"], X["authors"], X["titles"]
 
 async def documents_ordered_by_similarity(a, b, device="cuda"):
     global COS_SIM_BSIZE
@@ -69,7 +69,7 @@ async def start():
         asyncio.ensure_future(calculate_next_paper())
 
         result = abstracts[current_paper_index].strip()
-        return {"abstract": result}
+        return {"title": titles[current_paper_index], "authors": authors[current_paper_index], "abstract": result}
     else:
         return Response("Only post endpoint here", status=400)
 
@@ -102,7 +102,7 @@ async def swipe():
         next_paper_index = candidate_papers[0]
         candidate_papers = candidate_papers[1:]
     
-    return {"abstract": abstracts[current_paper_index]}
+    return {"title": titles[current_paper_index], "authors": authors[current_paper_index], "abstract": abstracts[current_paper_index]}
   
 if __name__ == "__main__": 
     app.run(debug=True, port=8787)

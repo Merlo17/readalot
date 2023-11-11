@@ -3,9 +3,23 @@ import pickle
 import torch
 import numpy as np
 from torch.nn.functional import cosine_similarity
-from settings import EMBEDDING_DIM, OUTPUT_PATH, EMBEDDING_MODEL
+from settings import EMBEDDING_DIM, OUTPUT_PATH, EMBEDDING_MODEL, COS_SIM_BSIZE, NUM_DOCUMENTS
 
-model = SentenceTransformer(EMBEDDING_MODEL)
+def documents_ordered_by_similarity(a, b, device="cuda"):
+    global COS_SIM_BSIZE
+
+    similarities = torch.zeros([NUM_DOCUMENTS]).to(device)
+
+    for i in range(0, NUM_DOCUMENTS, COS_SIM_BSIZE):
+        batch = b[i : i+COS_SIM_BSIZE].to(device)
+        new_similarities = cosine_similarity(a, batch, dim=1)
+        similarities[i : i+COS_SIM_BSIZE] = new_similarities
+
+    return np.flip(torch.argsort(similarities, axis=0).cpu().numpy())
+
+
+device = "cuda"
+model = SentenceTransformer(EMBEDDING_MODEL, device=device)
 with open(OUTPUT_PATH, "rb") as f:
     X = pickle.load(f)
     abstracts, embeddings = X["abstracts"], X["embeddings"]
@@ -17,11 +31,9 @@ with open(OUTPUT_PATH, "rb") as f:
 # text = "how backpropagation works in neural networks"
 text = "heart disease and cardiovascular problems"
 
-text_embedding = torch.Tensor(model.encode(text)).reshape([1, EMBEDDING_DIM])
-similarities = cosine_similarity(text_embedding, embeddings, dim=1)
+text_embedding = torch.Tensor(model.encode(text)).unsqueeze(0).to(device)
+best = documents_ordered_by_similarity(text_embedding, embeddings, device=device)
 
-best = np.argsort(similarities, axis=0)
-
-for article in best[-3:]:
+for article in best[:3]:
     print("\n##############")
     print(abstracts[article.item()])
