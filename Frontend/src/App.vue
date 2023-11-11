@@ -1,7 +1,7 @@
 <template>
     <div
         id="app"
-        class="flex flex-col gap-16 w-full mt-0 place-content-center place-items-center bg-slate-100"
+        class="flex flex-col mt-0 pt-0 place-items-center bg-slate-100 h-screen w-screen"
     >
         <NavigationBar />
         <router-view class="w-1/2"></router-view>

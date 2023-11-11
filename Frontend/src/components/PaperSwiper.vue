@@ -98,38 +98,65 @@ async function swipeRight() {
             :observeSlideChildren="true"
             :observeParents="true"
             @swiper="setSwiperRef"
-            class="w-[500px] h-[600px]"
+            class="w-[550px] h-[700px]"
         >
             <swiper-slide v-for="(paper, index) in visiblePapers" :key="index">
-                <div class="swiper-slide">
-                    <div class="flex flex-col gap-8 mt-20 m-10">
-                        <h1 class="font-bold text-4xl">{{ paper.title }}</h1>
-                        <div class="flex flex-row justify-between italic">
-                            <p>{{ paper.authors }}</p>
-                            <p>{{ paper.date }}</p>
+                <div
+                    class="rounded overflow-hidden p-10 space-y-10 sticky flex flex-col justify-between bg-white"
+                >
+                    <div class="space-y-4">
+                        <div class="flex flex-row justify-center">
+                            <h1 class="text-2xl font-bold">
+                                {{ paper.title }}
+                            </h1>
                         </div>
-                        <p class="text-ellipsis text-justify">
+                        <div class="flex flex-row justify-between">
+                            <h2 class="text-xl italic">{{ paper.authors }}</h2>
+                            <h2 class="text-xl">{{ paper.date }}</h2>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <p
+                            class="text-sm text-ellipsis overflow-hidden text-justify h-full"
+                        >
                             {{ paper.abstract }}
                         </p>
+                    </div>
+
+                    <div class="flex justify-between">
+                        <div class="flex justify-between gap-6">
+                            <button @click="swipeLeft">
+                                <font-awesome-icon
+                                    class="w-8 h-8"
+                                    v-bind:icon="['far', 'circle-xmark']"
+                                    color="#1E293B"
+                                />
+                            </button>
+                            <button @click="swipeRight">
+                                <font-awesome-icon
+                                    class="w-8 h-8"
+                                    v-bind:icon="
+                                        paper.liked
+                                            ? ['fas', 'heart']
+                                            : ['far', 'heart']
+                                    "
+                                    v-bind="
+                                        paper.liked
+                                            ? { color: '#ff7477' }
+                                            : { color: '#1E293B' }
+                                    "
+                                />
+                            </button>
+                        </div>
+                        <a
+                            :href="paper.doi"
+                            class="text-blue-500 hover:underline"
+                            >{{ paper.doi }}</a
+                        >
                     </div>
                 </div>
             </swiper-slide>
         </swiper>
-
-        <div class="buttons">
-            <button @click="swipeLeft">
-                <font-awesome-icon
-                    :icon="['fas', 'circle-xmark']"
-                    class="swipe-button"
-                />
-            </button>
-            <button @click="swipeRight">
-                <font-awesome-icon
-                    :icon="['fas', 'heart']"
-                    class="swipe-button"
-                />
-            </button>
-        </div>
     </div>
 </template>
 
@@ -146,25 +173,6 @@ body {
     height: 100%;
 }
 
-body {
-    background: #eee;
-    font-family:
-        Helvetica Neue,
-        Helvetica,
-        Arial,
-        sans-serif;
-    font-size: 14px;
-    color: #000;
-    margin: 0;
-    padding: 0;
-}
-
-.swipe-button {
-    font-size: 60px;
-    padding: 1rem;
-    color: #082235;
-}
-
 .buttons {
     display: flex;
     justify-content: center;
@@ -172,24 +180,10 @@ body {
     margin: 0 10px;
 }
 
-body {
-    background: #fff;
-    font-size: 14px;
-    color: #000;
-    margin: 0;
-    padding: 0;
-}
-
-html,
-body {
-    position: relative;
-    height: 100%;
-}
-
 .swiper-slide {
     display: flex;
     border-radius: 18px;
     color: #082235;
-    background: #d7e3fc;
+    background: #ffffff;
 }
 </style>

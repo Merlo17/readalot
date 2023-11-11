@@ -6,7 +6,7 @@ const swipeEndpoint = 'swipe';
 const browseEndpoint = 'start';
 
 const api = axios.create({
-  baseURL,
+    baseURL,
 });
 
-export {api, swipeEndpoint, browseEndpoint};
+export { api, swipeEndpoint, browseEndpoint };
