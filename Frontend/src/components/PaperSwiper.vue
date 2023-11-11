@@ -11,6 +11,8 @@ import 'swiper/css/effect-cards';
 // Import required modules
 import { EffectCards } from 'swiper/modules';
 
+const ANIMATION_DURATION = 100;
+
 let props = defineProps<{
     papers: Ref<string[]>;
 }>();
@@ -41,16 +43,16 @@ function updateList(data: any) {
 }
 
 async function swipeLeft() {
-    swiperRef.translateTo(swiperRef.getTranslate() + swiperRef.width, 100);
-    
+    swiperRef.translateTo(
+        swiperRef.getTranslate() + swiperRef.width,
+        ANIMATION_DURATION,
+    );
+
     try {
-        const { data } = await ApiService.swipe(
-          { swipeDirection: "left" }
-        );    
+        const { data } = await ApiService.swipe({ swipeDirection: 'left' });
         setTimeout(function () {
             updateList(data);
-        }, 100);
-
+        }, ANIMATION_DURATION);
     } catch (err) {
         // uh oh
         console.log(err);
@@ -58,16 +60,16 @@ async function swipeLeft() {
 }
 
 async function swipeRight() {
-    swiperRef.translateTo(swiperRef.getTranslate() - swiperRef.width, 100);
+    swiperRef.translateTo(
+        swiperRef.getTranslate() - swiperRef.width,
+        ANIMATION_DURATION,
+    );
 
     try {
-        const { data } = await ApiService.swipe(
-          { swipeDirection: "right" }
-        );    
+        const { data } = await ApiService.swipe({ swipeDirection: 'right' });
         setTimeout(function () {
             updateList(data);
-        }, 100);
-        
+        }, ANIMATION_DURATION);
     } catch (err) {
         // uh oh
         console.log(err);
@@ -85,20 +87,25 @@ async function swipeRight() {
             :observer="true"
             :observeSlideChildren="true"
             :observeParents="true"
-            class="mySwiper"
             @swiper="setSwiperRef"
+            class="w-[500px] h-[600px]"
         >
             <swiper-slide v-for="(paper, index) in visiblePapers" :key="index">
                 <div class="swiper-slide">
-                    <div class="paper">
-                        <h1>{{ paper }}</h1>
-                        <h3>Some text</h3>
+                    <div class="flex flex-col gap-8 mt-20 m-10">
+                        <h1 class="font-bold text-4xl">{{ paper.title }}</h1>
+                        <div class="flex flex-row justify-between italic">
+                            <p>{{ paper.authors }}</p>
+                            <p>{{ paper.date }}</p>
+                        </div>
+                        <p class="text-ellipsis text-justify">
+                            {{ paper.abstract }}
+                        </p>
                     </div>
                 </div>
             </swiper-slide>
         </swiper>
 
-        <!-- Buttons -->
         <div class="buttons">
             <button @click="swipeLeft">
                 <font-awesome-icon
@@ -113,7 +120,6 @@ async function swipeRight() {
                 />
             </button>
         </div>
-        <!-- Pagination -->
     </div>
 </template>
 
@@ -170,30 +176,10 @@ body {
     height: 100%;
 }
 
-#app {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.swiper {
-    width: 500px;
-    height: 800px;
-}
-
 .swiper-slide {
     display: flex;
-    align-items: center;
-    justify-content: center;
     border-radius: 18px;
-    font-size: 22px;
-    font-weight: bold;
     color: #082235;
     background: #d7e3fc;
-}
-.center {
-    margin: auto;
-    width: 50%;
-    padding: 10px;
 }
 </style>

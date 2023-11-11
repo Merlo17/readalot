@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import SearchInput from 'vue-search-input';
 import 'vue-search-input/dist/styles.css';
 
@@ -19,5 +19,3 @@ const query = computed({
 <template>
     <search-input v-model="query" />
 </template>
-
-<style scoped></style>
