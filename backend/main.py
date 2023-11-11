@@ -26,11 +26,11 @@ with open("data_full.pickle", "rb") as f:
 
 def format_output(paper_index):
     return {
-        "title": titles[current_paper_index],
-        "authors": authors[current_paper_index],
-        "abstract": abstracts[current_paper_index].strip(),
-        "doi": doi[current_paper_index],
-        "created": created[current_paper_index]
+        "title": titles[paper_index],
+        "authors": authors[paper_index],
+        "abstract": abstracts[paper_index].strip(),
+        "doi": doi[paper_index],
+        "created": created[paper_index]
     }
 
 async def documents_ordered_by_similarity(a, b, device=device):
@@ -67,7 +67,7 @@ async def start():
         prev_papers = []
         
         # Calculate ordering of documents wrt. query
-        query = request.form['query']
+        query = request.json['query']
         query_embedding = torch.Tensor(model.encode(query)).unsqueeze(0)
         pref_vector[:] = query_embedding.to(device)
         sorted_papers = await documents_ordered_by_similarity(pref_vector, embeddings)
@@ -98,7 +98,7 @@ async def swipe():
     prev_papers.append(next_paper_index)
     current_paper_index = next_paper_index
 
-    swipe_direction = request.form['swipeDirection']
+    swipe_direction = request.json['swipeDirection']
     if swipe_direction == "right":
         # Update preference vector to be the mean of current and the document that was swiped right on
         pref_vector = torch.mean(torch.stack([pref_vector.squeeze(), embeddings[next_paper_index].to(device)]), dim=0, keepdim=False).unsqueeze(0)
