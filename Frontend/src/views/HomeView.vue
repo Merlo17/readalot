@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue';
+import PaperSwiper from '../components/PaperSwiper.vue';
+let tmpPapers = ['Slide 1', 'Slide 2'];
 </script>
 
 <template>
     <main>
-        <TheWelcome />
+        <PaperSwiper :papers="tmpPapers" />
     </main>
 </template>
