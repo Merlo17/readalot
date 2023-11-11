@@ -9,6 +9,7 @@ from settings import EMBEDDING_MODEL, EMBEDDING_DIM, NUM_RESULTS, COS_SIM_BSIZE
 
 app = Flask(__name__)
 model = SentenceTransformer(EMBEDDING_MODEL)
+model.eval()
 device = "cpu"
 
 
@@ -22,6 +23,15 @@ candidate_papers = []                                               # These are 
 with open("data_full.pickle", "rb") as f:
     X = pickle.load(f)
     abstracts, embeddings, authors, titles, doi, created = X["abstracts"], X["embeddings"], X["authors"], X["titles"], X["doi"], X["created"]
+
+def format_output(paper_index):
+    return {
+        "title": titles[current_paper_index],
+        "authors": authors[current_paper_index],
+        "abstract": abstracts[current_paper_index].strip(),
+        "doi": doi[current_paper_index],
+        "created": created[current_paper_index]
+    }
 
 async def documents_ordered_by_similarity(a, b, device=device):
     global COS_SIM_BSIZE
@@ -53,6 +63,8 @@ async def start():
     global current_paper_index, next_paper_indexes, pref_vector, prev_papers, device
 
     if request.method == 'POST':
+        # We now start a new session, clear previously shown papers
+        prev_papers = []
         
         # Calculate ordering of documents wrt. query
         query = request.form['query']
@@ -68,8 +80,7 @@ async def start():
         prev_papers.append(current_paper_index)
         asyncio.ensure_future(calculate_next_paper())
 
-        result = abstracts[current_paper_index].strip()
-        return {"title": titles[current_paper_index], "authors": authors[current_paper_index], "abstract": result, "doi": doi[current_paper_index], "created": created[current_paper_index]}
+        return format_output(current_paper_index)
     else:
         return Response("Only post endpoint here", status=400)
 
@@ -102,7 +113,7 @@ async def swipe():
         next_paper_index = candidate_papers[0]
         candidate_papers = candidate_papers[1:]
     
-    return {"title": titles[current_paper_index], "authors": authors[current_paper_index], "abstract": abstracts[current_paper_index], "doi": doi[current_paper_index], "created": created[current_paper_index]}
+    return format_output(current_paper_index)
   
 if __name__ == "__main__": 
     app.run(host="0.0.0.0", debug=True, port=8787)
