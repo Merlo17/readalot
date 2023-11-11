@@ -2,6 +2,7 @@
 import { ref, defineProps, Ref } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import ApiService from '@/services/ApiService';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -25,10 +26,11 @@ function setSwiperRef(swiper: any) {
     swiperRef.update();
 }
 
-function updateList() {
+function updateList(data: any) {
     swiperRef.activeIndex = 1;
 
     currPaperIdx = (currPaperIdx + 1) % props.papers.length;
+    props.paper[currPaperIdx] = data;
     visiblePapers.value = [
         props.papers[(currPaperIdx + 1) % props.papers.length],
         props.papers[currPaperIdx],
@@ -38,20 +40,38 @@ function updateList() {
     swiperRef.update();
 }
 
-function swipeLeft() {
+async function swipeLeft() {
     swiperRef.translateTo(swiperRef.getTranslate() + swiperRef.width, 100);
-    setTimeout(function () {
-        updateList();
-    }, 100);
+    
+    try {
+        const { data } = await ApiService.swipe(
+          { swipeDirection: "left" }
+        );    
+        setTimeout(function () {
+            updateList(data);
+        }, 100);
+
+    } catch (err) {
+        // uh oh
+        console.log(err);
+    }
 }
 
-function swipeRight() {
+async function swipeRight() {
     swiperRef.translateTo(swiperRef.getTranslate() - swiperRef.width, 100);
-    setTimeout(function () {
-        updateList();
-    }, 100);
 
-    // TODO: Update papers from server (with new query if liked)
+    try {
+        const { data } = await ApiService.swipe(
+          { swipeDirection: "right" }
+        );    
+        setTimeout(function () {
+            updateList(data);
+        }, 100);
+        
+    } catch (err) {
+        // uh oh
+        console.log(err);
+    }
 }
 </script>
 
