@@ -1,13 +1,26 @@
 <template>
-    <main>
-        <PaperSwiper :paper="ref(tmpPapers[0])" />
+    <main
+        class="flex flex-col gap-16 w-full mt-0 place-content-center place-items-center"
+    >
+        <NavigationBar :onSubmitQuery="sendQuery(query)" />
+        <PaperSwiper class="w-1/2" :paper="ref(tmpPapers[0])" />
     </main>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
-import QueryBar from '../components/QueryBar.vue';
+import NavigationBar from '../components/NavigationBar.vue';
 import PaperSwiper from '../components/PaperSwiper.vue';
+import ApiService from '@/services/ApiService';
+
+async function sendQuery(query: string) {
+    try {
+        const { data } = await ApiService.browse({ query: query });
+    } catch (err) {
+        // uh oh
+        console.log(err);
+    }
+}
 
 let query = ref('');
 let tmpPapers = reactive([

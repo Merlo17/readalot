@@ -6,7 +6,7 @@
             <img src="../assets/img/logo_white.png" class="h-16" alt="Logo" />
         </div>
         <div class="w-1/3 justify-center">
-            <QueryBar v-model="query" />
+            <QueryBar v-model="query" :onClick="submitQuery(query)" />
         </div>
         <div class="w-1/3 flex justify-end">
             <img
@@ -20,4 +20,10 @@
 
 <script setup lang="ts">
 import QueryBar from '../components/QueryBar.vue';
+
+const emit = defineEmits(['onSubmitQuery']);
+
+function submitQuery(query: string) {
+    emit('onSubmitQuery', query);
+}
 </script>

@@ -1,16 +1,8 @@
 <template>
-    <div
-        id="app"
-        class="flex flex-col gap-16 w-full mt-0 place-content-center place-items-center"
-    >
-        <NavigationBar />
-        <router-view class="w-1/2"></router-view>
+    <div id="app">
+        <router-view></router-view>
     </div>
 </template>
-
-<script setup lang="ts">
-import NavigationBar from './components/NavigationBar.vue';
-</script>
 
 <style>
 @tailwind base;
