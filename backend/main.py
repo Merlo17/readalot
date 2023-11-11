@@ -9,7 +9,7 @@ from settings import EMBEDDING_MODEL, EMBEDDING_DIM, NUM_RESULTS, COS_SIM_BSIZE
 
 app = Flask(__name__)
 model = SentenceTransformer(EMBEDDING_MODEL)
-device = "cuda"
+device = "cpu"
 
 
 pref_vector = torch.zeros([1, EMBEDDING_DIM]).to(device)            # The current preference vector, the documents are ordered according to cosine similarity wrt. this vector
@@ -19,11 +19,11 @@ prev_papers = []                                                    # Articles t
 candidate_papers = []                                               # These are used for left swipes, so there is no need to reorder the articles
 
 
-with open("../train/data_full.pickle", "rb") as f:
+with open("data_full.pickle", "rb") as f:
     X = pickle.load(f)
-    abstracts, embeddings, authors, titles = X["abstracts"], X["embeddings"], X["authors"], X["titles"]
+    abstracts, embeddings, authors, titles, doi, created = X["abstracts"], X["embeddings"], X["authors"], X["titles"], X["doi"], X["created"]
 
-async def documents_ordered_by_similarity(a, b, device="cuda"):
+async def documents_ordered_by_similarity(a, b, device=device):
     global COS_SIM_BSIZE
     similarities = torch.zeros([b.shape[0]]).to(device)
 
@@ -69,7 +69,7 @@ async def start():
         asyncio.ensure_future(calculate_next_paper())
 
         result = abstracts[current_paper_index].strip()
-        return {"title": titles[current_paper_index], "authors": authors[current_paper_index], "abstract": result}
+        return {"title": titles[current_paper_index], "authors": authors[current_paper_index], "abstract": result, "doi": doi[current_paper_index], "created": created[current_paper_index]}
     else:
         return Response("Only post endpoint here", status=400)
 
@@ -102,7 +102,7 @@ async def swipe():
         next_paper_index = candidate_papers[0]
         candidate_papers = candidate_papers[1:]
     
-    return {"title": titles[current_paper_index], "authors": authors[current_paper_index], "abstract": abstracts[current_paper_index]}
+    return {"title": titles[current_paper_index], "authors": authors[current_paper_index], "abstract": abstracts[current_paper_index], "doi": doi[current_paper_index], "created": created[current_paper_index]}
   
 if __name__ == "__main__": 
-    app.run(debug=True, port=8787)
+    app.run(host="0.0.0.0", debug=True, port=8787)
