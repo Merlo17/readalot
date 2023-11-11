@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import { ref, defineProps } from 'vue';
+import { ref, defineProps, Ref } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/effect-cards';
-// import './assets/swiper.css';
 
 // Import required modules
 import { EffectCards } from 'swiper/modules';
 
 let props = defineProps<{
-    papers: string[];
+    papers: Ref<string[]>;
 }>();
 let visiblePapers = ref([props.papers[1], props.papers[0], props.papers[1]]);
 let currPaperIdx = 0;
@@ -82,10 +81,16 @@ function swipeRight() {
         <!-- Buttons -->
         <div class="buttons">
             <button @click="swipeLeft">
-                <font-awesome-icon :icon="['fas', 'circle-xmark']"  class="swipe-button" />
+                <font-awesome-icon
+                    :icon="['fas', 'circle-xmark']"
+                    class="swipe-button"
+                />
             </button>
             <button @click="swipeRight">
-                <font-awesome-icon :icon="['fas', 'heart']" class="swipe-button" />
+                <font-awesome-icon
+                    :icon="['fas', 'heart']"
+                    class="swipe-button"
+                />
             </button>
         </div>
         <!-- Pagination -->
@@ -167,8 +172,8 @@ body {
     background: #d7e3fc;
 }
 .center {
-  margin: auto;
-  width: 50%;
-  padding: 10px;
+    margin: auto;
+    width: 50%;
+    padding: 10px;
 }
 </style>
