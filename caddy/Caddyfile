@@ -1,0 +1,21 @@
+{
+	admin 127.0.0.1:2019
+	auto_https off
+}
+
+http://94.237.114.105:80 {
+	root * /var/www/junction
+	file_server browse
+
+	handle /swipe {
+		reverse_proxy http://94.237.114.105:8787
+	}
+
+	handle /start {
+		reverse_proxy http://94.237.114.105:8787
+	}
+}
+
+94.237.114.105:443 {
+	redir 94.237.114.105:80
+}

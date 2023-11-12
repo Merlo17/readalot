@@ -20,7 +20,7 @@ prev_papers = []                                                    # Articles t
 candidate_papers = []                                               # These are used for left swipes, so there is no need to reorder the articles
 
 
-with open("data_full.pickle", "rb") as f:
+with open("../../data_full.pickle", "rb") as f:
     X = pickle.load(f)
     abstracts, embeddings, authors, titles, doi, created = X["abstracts"], X["embeddings"], X["authors"], X["titles"], X["doi"], X["created"]
 
@@ -43,7 +43,7 @@ async def documents_ordered_by_similarity(a, b, device=device):
         similarities[i : i+COS_SIM_BSIZE] = new_similarities
 
     ordered_documents = np.flip(torch.argsort(similarities, axis=0).cpu().numpy())
-    return ordered_documents[np.isin(ordered_documents, prev_papers) == False]
+    return ordered_documents[np.isin(ordered_documents, prev_papers) == False][:100]
 
 async def calculate_next_paper():
     global pref_vector, next_paper_index, embeddings, candidate_papers

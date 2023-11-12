@@ -27,12 +27,12 @@ let query = ref('');
 // let papers = ref([]);
 let papers = reactive([
     {
-        title: 'Paper 1',
-        date: '2021-01-01',
-        authors: 'Author 1, Author 2',
+        title: '',
+        date: '',
+        authors: '',
         abstract:
-            'Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat. Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat. Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat. Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.',
-        doi: 'https://doi.org/10.1109/ICCV.2019.00200',
+            '',
+        doi: '',
     },
     {
         title: 'Paper 2',

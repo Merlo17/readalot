@@ -117,7 +117,7 @@ async function swipeRight() {
                     </div>
                     <div class="flex">
                         <p
-                            class="text-sm text-ellipsis overflow-hidden text-justify h-full"
+                            class="text-sm text-ellipsis overflow-hidden text-justify h-full line-clamp [24]"
                         >
                             {{ paper.abstract }}
                         </p>
